@@ -6,6 +6,7 @@
 #
 
 library(shiny)
+library(ggplot2)
 
 #  Define a server for the Shiny app
 shinyServer(function(input, output) {
