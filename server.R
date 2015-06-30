@@ -20,8 +20,12 @@ shinyServer(function(input, output) {
       data <- data[data$iucn_cat == input$iucn_cat,]
     }
     if (input$country != "All"){
-      data <- data[data$iso3 == input$country,]
+      data <- data[data$iso3_country_name == input$country,]
     }
-    data
+    data <- data %>% 
+      group_by(iso3_country_name) %>% 
+      mutate(percent = round(area_km / sum(area_km) * 100, 2)) %>% 
+      arrange(iso3_country_name, iucn_cat)
+    return(data)
   })
 })

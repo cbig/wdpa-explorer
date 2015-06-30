@@ -1,3 +1,4 @@
+library(countrycode)
 library(dplyr)
 
 source("config.R")
@@ -16,10 +17,7 @@ summarize_pa_per_iso3 <- function(data){
       area_km = sum(rep_area)
     ) %>%
     ungroup() %>% 
-    as.data.frame() %>% 
-    group_by(iso3) %>% 
-    mutate(perc = round(area_km / sum(area_km) * 100, 2)) %>% 
-    arrange(iso3, iucn_cat)
+    as.data.frame()
   return(summary_data)
 }
 
@@ -30,6 +28,21 @@ pa_per_iso3_point$type <- "point"
 
 pa_per_iso3 <- bind_rows(pa_per_iso3_poly, pa_per_iso3_point)
 
+# Get real names
+country_names <- countrycode(pa_per_iso3$iso3, "iso3c", "country.name")
+for (i in 1:length(country_names)){
+  if (is.na(country_names[i])) {
+    country_names[i] <- pa_per_iso3$iso3[i]
+  } else {
+    country_names[i] <- paste0(pa_per_iso3$iso3[i], " (", country_names[i],
+                               ")")
+  }
+}
+
+pa_per_iso3$iso3_country_name <- country_names
+
 pa_per_iso3 <- pa_per_iso3 %>% 
-  select(iso3, type, iucn_cat, count, area_km, perc) %>% 
-  arrange(iso3, type, iucn_cat)
+  select(iso3_country_name, type, iucn_cat, count, area_km) %>% 
+  arrange(iso3_country_name, type, iucn_cat)
+
+
