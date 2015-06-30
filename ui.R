@@ -54,7 +54,11 @@ shinyUI(fluidPage(
                       choices=c("Percent", "Count", "Area")),
           hr(),
           helpText("Foo bar."),
-          plotOutput("iucncatPlot")
+          plotOutput("iucncatPlot"),
+          
+          hr(),
+          helpText("Foo bar."),
+          plotOutput("statusPlot")
         )
       )
     )

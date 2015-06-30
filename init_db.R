@@ -45,7 +45,7 @@ pa_per_iso3 <- pa_per_iso3 %>%
   select(iso3_country_name, type, iucn_cat, status, count, area_km) %>% 
   arrange(iso3_country_name, type, iucn_cat)
 
-pa_global <- pa_per_iso3 %>% 
+pa_cat_global <- pa_per_iso3 %>% 
   group_by(iucn_cat) %>% 
   summarise(
     count = sum(count),
@@ -55,3 +55,15 @@ pa_global <- pa_per_iso3 %>%
   mutate(perc = round(area_km / sum(area_km) * 100, 2), 
          iso3_country_name = "Global") %>% 
   select(iso3_country_name, iucn_cat, count, area_km, perc)
+
+pa_stat_global <- pa_per_iso3 %>% 
+  group_by(status) %>% 
+  summarise(
+    count = sum(count),
+    area_km = sum(area_km)
+  ) %>% 
+  ungroup() %>% 
+  mutate(perc = round(area_km / sum(area_km) * 100, 2), 
+         iso3_country_name = "Global") %>% 
+  select(iso3_country_name, status, count, area_km, perc)
+
