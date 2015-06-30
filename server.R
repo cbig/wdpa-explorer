@@ -31,4 +31,42 @@ shinyServer(function(input, output) {
       arrange(iso3_country_name, iucn_cat)
     return(data)
   })
+  
+  # Fill in the spot we created for a plot
+  output$iucncatPlot <- renderPlot({
+    
+    environment <- environment() 
+    
+    # If country is set to "All", display just the global stuff
+    if (input$country == "All") {
+      filter_string = "*"
+    } else {
+      filter_string = input$country
+    }
+    
+    # Check what we are using on the y-axis
+    if (input$yaxis == "Percent") {
+      yaxis_string = "perc"
+    } else if (input$yaxis == "Count") {
+      yaxis_string = "count"
+    } else if (input$yaxis == "Area") {
+      yaxis_string = "area_km"
+    }
+    
+    
+    
+    pa_per_iso3 %>% 
+      filter(iso3_country_name == filter_string) %>%
+      mutate(perc = round(area_km / sum(area_km) * 100, 2)) %>% 
+      select(iso3_country_name, iucn_cat, count, area_km, perc) %>%
+      bind_rows(., pa_global) %>% 
+      ggplot(aes(x = iucn_cat, y = get(yaxis_string), fill = iso3_country_name),
+             environment = environment) + 
+      geom_bar(position = "dodge", stat = "identity") + 
+      ylab(paste(input$yaxis, "\n")) + xlab("\nIUCN category") +
+      theme_bw() + theme(axis.text.x = element_text(angle = 45, hjust = 1),
+                         legend.position = c(0, 1),
+                         legend.justification = c(0, 1)) +
+      scale_fill_discrete(name = "")
+  })
 })
