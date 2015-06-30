@@ -13,6 +13,7 @@ shinyUI(fluidPage(
   
   fluidPage(
     titlePanel("WDPA Data Explorer"),
+    helpText("Based on WDPA version: June-2015"),
       fluidRow(
         column(8,
           # Create a new Row in the UI for selectInputs
@@ -53,11 +54,11 @@ shinyUI(fluidPage(
           selectInput("yaxis", "Y-axis:", 
                       choices=c("Percent", "Count", "Area")),
           hr(),
-          helpText("Foo bar."),
+          helpText("IUCN categories globally and by selected country."),
           plotOutput("iucncatPlot"),
           
           hr(),
-          helpText("Foo bar."),
+          helpText("PA status globally and by selected country."),
           plotOutput("statusPlot")
         )
       )
