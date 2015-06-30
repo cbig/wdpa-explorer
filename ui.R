@@ -16,23 +16,29 @@ shinyUI(fluidPage(
     
     # Create a new Row in the UI for selectInputs
     fluidRow(
-      column(4, 
+      column(3, 
              selectInput("country", 
                          "Country:", 
                          c("All", 
                            unique(as.character(pa_per_iso3$iso3_country_name))))
       ),
-      column(4, 
+      column(3, 
              selectInput("type", 
                          "Type:", 
                          c("All", 
                            c("polygon", "point")))
       ),
-      column(4, 
+      column(3, 
              selectInput("iucn_cat", 
                          "IUCN category:", 
                          c("All", 
-                           unique(as.character(pa_per_iso3$iucn_cat))))
+                           sort(unique(as.character(pa_per_iso3$iucn_cat)))))
+      ),
+      column(3, 
+             selectInput("status", 
+                         "Status:", 
+                         c("All", 
+                           sort(unique(as.character(pa_per_iso3$status)))))
       )
     ),
     # Create a new row for the table.

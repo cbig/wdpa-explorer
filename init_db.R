@@ -11,7 +11,7 @@ wdpa_point <- tbl(wdpa_db, "wdpa_point")
 
 summarize_pa_per_iso3 <- function(data){
   summary_data <- data %>%
-    group_by(iso3, iucn_cat) %>%
+    group_by(iso3, iucn_cat, status) %>%
     summarise(
       count = n(),
       area_km = sum(rep_area)
@@ -42,7 +42,7 @@ for (i in 1:length(country_names)){
 pa_per_iso3$iso3_country_name <- country_names
 
 pa_per_iso3 <- pa_per_iso3 %>% 
-  select(iso3_country_name, type, iucn_cat, count, area_km) %>% 
+  select(iso3_country_name, type, iucn_cat, status, count, area_km) %>% 
   arrange(iso3_country_name, type, iucn_cat)
 
 

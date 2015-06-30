@@ -13,14 +13,17 @@ shinyServer(function(input, output) {
   # Filter data based on selections
   output$table <- renderDataTable({
     data <- pa_per_iso3
+    if (input$country != "All"){
+      data <- data[data$iso3_country_name == input$country,]
+    }
     if (input$type != "All"){
       data <- data[data$type == input$type,]
     }
     if (input$iucn_cat != "All"){
       data <- data[data$iucn_cat == input$iucn_cat,]
     }
-    if (input$country != "All"){
-      data <- data[data$iso3_country_name == input$country,]
+    if (input$status != "All"){
+      data <- data[data$status == input$status,]
     }
     data <- data %>% 
       group_by(iso3_country_name) %>% 
