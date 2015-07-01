@@ -54,27 +54,27 @@ shinyServer(function(input, output) {
     iso3_data <- pa_per_iso3
     global_data <- pa_cat_global
     
-    # Determine which types are used ("All", "poly", "point")
-    if (input$type != "All") {
-      iso3_data <- iso3_data %>% 
-        filter(type == input$type)
-      global_data <- global_data %>% 
-        filter(type == input$type)
-    }
-    
     if (input$country != "All") {
       iso3_data <- iso3_data %>% 
         filter(iso3_country_name == input$country) %>%
-        bind_rows(., pp)
+        bind_rows(., global_data)
     } else {
       # Use just the global values
       iso3_data <- global_data
     }
     
-    # Calculate the stats dynamically
+    # Determine which types are used ("All", "poly", "point")
+    if (input$type != "All") {
+      iso3_data <- iso3_data %>% 
+        filter(type == input$type)
+    }
+    
+    # Calculate the stats dynamically, remember to group by iso3_country_name!
     iso3_data <- iso3_data %>% 
+      group_by(iso3_country_name) %>% 
       mutate(perc = round(area_km / sum(area_km) * 100, 2)) %>% 
-      select(iso3_country_name, iucn_cat, count, area_km, perc)
+      select(iso3_country_name, iucn_cat, count, area_km, perc) %>% 
+      ungroup()
     
     # Construct the plot
     p <- iso3_data %>% 
@@ -92,8 +92,28 @@ shinyServer(function(input, output) {
       }
     
     output$summaryText <- renderText({
-      paste0("Total ", tolower(input$yaxis), ": ", 
-             round(sum(iso3_data[yaxis_string]), 0), suffix)
+      
+      # Create output text
+      # Separate the country-level and global data
+      if (input$country != "All") {
+        
+        print_iso3_data <- iso3_data %>% 
+          filter(iso3_country_name != "Global")
+        iso3_text <- paste0("Country total ", tolower(input$yaxis), ": \t", 
+                            round(sum(print_iso3_data[yaxis_string]), 0), 
+                            suffix, "\n")
+      } else {
+        iso3_text <- ""
+      }
+      
+      print_global_data <- iso3_data %>% 
+        filter(iso3_country_name == "Global")
+      global_text <- paste0("Global total ", tolower(input$yaxis), ": \t", 
+                          round(sum(print_global_data[yaxis_string]), 0), 
+                          suffix)
+      
+      return(paste0(iso3_text, global_text))
+      
     })
     
     return(p)
