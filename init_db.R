@@ -9,8 +9,9 @@ wdpa_db <- src_postgres(dbname = DBNAME, host = HOST, port = PORT, user = USER,
 wdpa_poly <- tbl(wdpa_db, "wdpa_poly")
 wdpa_point <- tbl(wdpa_db, "wdpa_point")
 
-summarize_pa_per_iso3 <- function(data){
+summarize_land_pa_per_iso3 <- function(data){
   summary_data <- data %>%
+    filter(marine == "0") %>% 
     group_by(iso3, iucn_cat, status) %>%
     summarise(
       count = n(),
@@ -66,4 +67,3 @@ pa_stat_global <- pa_per_iso3 %>%
   mutate(perc = round(area_km / sum(area_km) * 100, 2), 
          iso3_country_name = "Global") %>% 
   select(iso3_country_name, status, count, area_km, perc)
-
