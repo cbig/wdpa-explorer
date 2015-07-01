@@ -22,9 +22,9 @@ summarize_land_pa_per_iso3 <- function(data){
   return(summary_data)
 }
 
-pa_per_iso3_poly <- summarize_pa_per_iso3(wdpa_poly)
+pa_per_iso3_poly <- summarize_land_pa_per_iso3(wdpa_poly)
 pa_per_iso3_poly$type <- "polygon"
-pa_per_iso3_point <- summarize_pa_per_iso3(wdpa_point) 
+pa_per_iso3_point <- summarize_land_pa_per_iso3(wdpa_point) 
 pa_per_iso3_point$type <- "point"
 
 pa_per_iso3 <- bind_rows(pa_per_iso3_poly, pa_per_iso3_point)
