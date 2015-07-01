@@ -3,7 +3,6 @@
 # You can find out more about building applications with Shiny here:
 #
 # http://shiny.rstudio.com
-#
 
 library(shiny)
 
@@ -53,6 +52,7 @@ shinyUI(fluidPage(
           width = 12,
           selectInput("yaxis", "Y-axis:", 
                       choices=c("Percent", "Count", "Area")),
+          tags$b("Selection:"),
           verbatimTextOutput("summaryText"),
           hr(),
           tags$p("IUCN categories globally and by selected country."),

@@ -69,6 +69,12 @@ shinyServer(function(input, output) {
         filter(type == input$type)
     }
     
+    # Filter on IUCN category selected
+    if (input$iucn_cat != "All") {
+      iso3_data <- iso3_data %>% 
+        filter(iucn_cat == input$iucn_cat)
+    }
+    
     # Calculate the stats dynamically, remember to group by iso3_country_name!
     iso3_data <- iso3_data %>% 
       group_by(iso3_country_name) %>% 
@@ -108,9 +114,14 @@ shinyServer(function(input, output) {
       
       print_global_data <- iso3_data %>% 
         filter(iso3_country_name == "Global")
+      
+      # Taking into account various filters, compare percentage to the global 
+      # value
+      #tot_global_perc <- 
+      
       global_text <- paste0("Global total ", tolower(input$yaxis), ": \t", 
-                          round(sum(print_global_data[yaxis_string]), 0), 
-                          suffix)
+                            round(sum(print_global_data[yaxis_string]), 0), 
+                            suffix)
       
       return(paste0(iso3_text, global_text))
       
