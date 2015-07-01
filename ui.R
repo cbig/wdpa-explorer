@@ -53,8 +53,9 @@ shinyUI(fluidPage(
           width = 12,
           selectInput("yaxis", "Y-axis:", 
                       choices=c("Percent", "Count", "Area")),
+          verbatimTextOutput("summaryText"),
           hr(),
-          helpText("IUCN categories globally and by selected country."),
+          tags$p("IUCN categories globally and by selected country."),
           plotOutput("iucncatPlot"),
           
           hr(),
