@@ -6,8 +6,8 @@ source("config.R")
 wdpa_db <- src_postgres(dbname = DBNAME, host = HOST, port = PORT, user = USER,
                         password = PASSWORD, options="-c search_path=wdpa")
 
-wdpa_poly <- tbl(wdpa_db, "wdpa_poly")
-wdpa_point <- tbl(wdpa_db, "wdpa_point")
+wdpa_poly <- tbl(wdpa_db, "wdpa_poly_geom")
+wdpa_point <- tbl(wdpa_db, "wdpa_point_geom")
 
 summarize_land_pa_per_iso3 <- function(data){
   summary_data <- data %>%
